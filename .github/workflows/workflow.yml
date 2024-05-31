@@ -1,0 +1,26 @@
+name: Docker Build & Push to OCIR
+
+on:
+  push:
+    branches: [ main ]
+
+jobs:
+
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v3
+    
+    - name: Log in to OCIR
+      run: |
+        echo "${{ secrets.OCIR_PASSWORD }}" | docker login -u "${{ secrets.OCIR_USERNAME }}" --password-stdin eu-frankfurt-1.ocir.io
+
+    - name: Build and push Docker image
+      run: |
+        docker build -t eu-frankfurt-1.ocir.io/frcym46yntql/your-ocir-repo/hello-world:latest .
+        docker push eu-frankfurt-1.ocir.io/frcym46yntql/your-ocir-repo/hello-world:latest
+        
+    - name: Update OKE deployment
+      # Ovdje dodate naredbe za ažuriranje implementacije na OKE
+
